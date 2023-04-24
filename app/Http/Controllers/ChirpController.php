@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; //Defined
+use Illuminate\Http\RedirectResponse;
 
 class ChirpController extends Controller
 {
@@ -14,15 +16,31 @@ class ChirpController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // public function index(): Response //Defined - return a test message
-    // {
 
-    //     return response('Hello, World');
-    // }
+    // public function index(): Response - return a test message
+    public function index(): View
+    { //render a Blade view
+        //return response('Hello, World');
+        return view('chirps.index', [
+            'chirps' => Chirp::with('user')->latest()->get(),
+        ]);
+    }
 
-    //render a Blade view
-    public function index(): View{
-        return view('chirps.index');
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate(
+            ['message' => 'required|string|max:255']
+        );
+ 
+        $request->user()->chirps()->create($validated);
+ 
+        return redirect(route('chirps.index'));
     }
 
     /**
@@ -33,17 +51,7 @@ class ChirpController extends Controller
     public function create()
     {
         //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
