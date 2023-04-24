@@ -16,6 +16,6 @@ class Chirp extends Model
 
     public function user(): BelongsTo //Chirp & user relationship defined.
     {
-        return $this->belongsTo(Chirp::class);
+        return $this->belongsTo(User::class);
     }
 }
