@@ -18,12 +18,13 @@ class ChirpController extends Controller
 
 
     // public function index(): Response - return a test message
+    //  return response('Hello, World');  
+    //
     public function index(): View
-    { //render a Blade view
-        //return response('Hello, World');
+    {
         return view('chirps.index', [
             'chirps' => Chirp::with('user')->latest()->get(),
-        ]);
+        ]); //return chirp belonging to login user 
     }
 
     /**
@@ -37,9 +38,9 @@ class ChirpController extends Controller
         $validated = $request->validate(
             ['message' => 'required|string|max:255']
         );
- 
+
         $request->user()->chirps()->create($validated);
- 
+
         return redirect(route('chirps.index'));
     }
 
